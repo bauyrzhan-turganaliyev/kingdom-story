@@ -13,10 +13,10 @@ namespace turganaliyev.Jobs.Blacksmith
         private float nextUpdate = 1f;
         private bool _isOpened;
         
-        public void Init(ref Action OnOrderServiceOpened, ref Action OnOrderServiceExit)
+        public void Init(BlacksmithService blacksmithService)
         {
-            OnOrderServiceOpened += ServiceOpened;
-            OnOrderServiceExit += ServiceExit;
+            blacksmithService.OnServiceOpened += ServiceOpened;
+            blacksmithService.OnServiceExit += ServiceExit;
         }
 
         void Update()

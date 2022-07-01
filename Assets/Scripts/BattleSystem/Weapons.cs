@@ -2,11 +2,11 @@
 {
     public enum Weapons
     {
-        Longsword,
-        Bow,
-        SwordAndShield,
-        Axe,
-        NoWeapon,
-        Mace
+        Longsword = 0,
+        Bow = 1,
+        SwordAndShield = 2,
+        Axe = 3,
+        Mace = 4,
+        NoWeapon = 5
     }
 }

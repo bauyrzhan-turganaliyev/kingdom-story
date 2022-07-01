@@ -2,7 +2,7 @@
 {
     public enum Team
     {
-        Alias,
-        Enemy
+        Alias = 0,
+        Enemy = 1
     }
 }

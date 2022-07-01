@@ -1,8 +1,15 @@
-﻿namespace turganaliyev.BattleSystem
+﻿using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace turganaliyev.BattleSystem
 {
-    [System.Serializable]
-    public class Battler
+    public class Battler : MonoBehaviour
     {
+        public TMP_Text DamageText;
+        public TMP_Text DamageCDText;
+        public Image WeaponImage;
+
         public Team Team;
         public Weapons Weapon;
 

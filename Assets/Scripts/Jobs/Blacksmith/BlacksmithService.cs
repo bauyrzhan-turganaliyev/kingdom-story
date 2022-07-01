@@ -9,25 +9,25 @@ namespace turganaliyev.Jobs.Blacksmith
         [SerializeField] private OrderService _orderService;
         [SerializeField] private GameObject _blackSmithMainPanel;
 
-        public Action OnOrderServiceOpened;
-        public Action OnOrderServiceExit;
+        public Action OnServiceOpened;
+        public Action OnServiceExit;
         public void Init()
         {
-            _orderService.Init(ref OnOrderServiceOpened, ref OnOrderServiceExit);
+            _orderService.Init(this);
         }
 
         public void OnClick()
         {
             _transform.SetAsLastSibling();
             _blackSmithMainPanel.SetActive(true);
-            OnOrderServiceOpened?.Invoke();
+            OnServiceOpened?.Invoke();
         }
         
         public void OnExit()
         {
             _transform.SetAsLastSibling();
             _blackSmithMainPanel.SetActive(false);
-            OnOrderServiceExit?.Invoke();
+            OnServiceExit?.Invoke();
         }
     }
 }
