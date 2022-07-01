@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using System;
+using TMPro;
 using UnityEngine;
 
 namespace turganaliyev.Jobs.Blacksmith
@@ -10,14 +11,17 @@ namespace turganaliyev.Jobs.Blacksmith
 
         private int _ordersCount;
         private float nextUpdate = 1f;
+        private bool _isOpened;
         
-        public void Init()
+        public void Init(ref Action OnOrderServiceOpened, ref Action OnOrderServiceExit)
         {
+            OnOrderServiceOpened += ServiceOpened;
+            OnOrderServiceExit += ServiceExit;
         }
 
         void Update()
         {
-            if (Time.time >= nextUpdate && _ordersCount < 10)
+            if (Time.time >= nextUpdate && _ordersCount < 10 && _isOpened)
             {
                 nextUpdate = Time.time + 1f;
                 UpdateEverySecond();
@@ -32,6 +36,17 @@ namespace turganaliyev.Jobs.Blacksmith
             orderComponent.Init();
 
             _ordersCount++;
+        }
+
+        private void ServiceOpened()
+        {
+            print("Called");
+            _isOpened = true;
+        }
+        private void ServiceExit()
+        {
+            print("Called");
+            _isOpened = false;
         }
     }
 }

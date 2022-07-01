@@ -1,51 +1,33 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace turganaliyev.Jobs.Blacksmith
 {
     public class BlacksmithService : MonoBehaviour
     {
+        [SerializeField] private Transform _transform;
         [SerializeField] private OrderService _orderService;
         [SerializeField] private GameObject _blackSmithMainPanel;
-        [SerializeField] private GameObject _questionToQuitPanel;
 
-        private bool _isActive;
+        public Action OnOrderServiceOpened;
+        public Action OnOrderServiceExit;
         public void Init()
         {
-            _orderService.Init();
+            _orderService.Init(ref OnOrderServiceOpened, ref OnOrderServiceExit);
         }
 
         public void OnClick()
         {
-            if (!_isActive)
-            {
-                _blackSmithMainPanel.SetActive(true);
-                _isActive = true;
-            }
-            else
-            {
-                _questionToQuitPanel.SetActive(true);   
-            }
-        }
-
-
-        public void QuestionToQuit(bool flag)
-        {
-            _questionToQuitPanel.SetActive(false);
-            _isActive = !flag;
-            if (flag)
-            {
-                _blackSmithMainPanel.SetActive(false);
-            }
-        }
-
-        public void OnYes()
-        {
-            QuestionToQuit(true);
+            _transform.SetAsLastSibling();
+            _blackSmithMainPanel.SetActive(true);
+            OnOrderServiceOpened?.Invoke();
         }
         
-        public void OnNo()
+        public void OnExit()
         {
-            QuestionToQuit(false);
+            _transform.SetAsLastSibling();
+            _blackSmithMainPanel.SetActive(false);
+            OnOrderServiceExit?.Invoke();
         }
-     }
+    }
 }
