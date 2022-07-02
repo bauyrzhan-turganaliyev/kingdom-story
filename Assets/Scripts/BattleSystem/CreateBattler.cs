@@ -1,10 +1,7 @@
 ﻿using System.Collections.Generic;
-using TMPro;
-using turganaliyev.Jobs.Blacksmith;
 using UnityEngine;
-using UnityEngine.UI;
 
-namespace turganaliyev.BattleSystem
+namespace oks.BattleSystem
 {
     public class CreateBattler : MonoBehaviour
     {
@@ -12,7 +9,7 @@ namespace turganaliyev.BattleSystem
         [SerializeField] private GameObject _battlerEnemyObject;
         [SerializeField] private List<Sprite> _weaponsList;
         
-        public GameObject CreateBattlerObject(Battler battler)
+        public (GameObject, Battler) CreateBattlerObject(Battler battler)
         {
             GameObject battlerObject = null;
             battlerObject = Instantiate(battler.Team == Team.Alias ? _battlerAliasObject : _battlerEnemyObject);
@@ -30,6 +27,11 @@ namespace turganaliyev.BattleSystem
 
             battlerComponent.PlayerOrNpcText.text = battlerComponent.IsPlayer ? "Player" : "NPC";
             battlerComponent.PlayerOrNpcText.color = battlerComponent.IsPlayer ? Color.green : Color.red;
+
+            battlerComponent.HP = 100;
+            battlerComponent.HPBar.maxValue = battler.HP;
+            battlerComponent.HPBar.value = battlerComponent.HPBar.maxValue;
+            
             var weaponImage = battlerComponent.WeaponImage;
             switch ((int)battlerComponent.Weapon)
             {
@@ -53,7 +55,7 @@ namespace turganaliyev.BattleSystem
                     break;
             }
 
-            return battlerObject;
+            return (battlerObject, battlerComponent);
         }
     }
 }

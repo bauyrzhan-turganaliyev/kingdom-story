@@ -13,6 +13,7 @@ namespace oks.GameStateMachine
         {
             GameSystem.SetText("Battle starting...");
             
+            GameSystem.SetState(new BattleTime(GameSystem));
             yield break;
         }
     }

@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace turganaliyev.UI
+namespace oks.UI
 {
     [System.Serializable]
     public class QuestionToQuit

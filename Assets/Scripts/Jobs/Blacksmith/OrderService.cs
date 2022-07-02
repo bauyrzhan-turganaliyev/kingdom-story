@@ -1,8 +1,6 @@
-﻿using System;
-using TMPro;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace turganaliyev.Jobs.Blacksmith
+namespace oks.Jobs.Blacksmith
 {
     public class OrderService : MonoBehaviour
     {

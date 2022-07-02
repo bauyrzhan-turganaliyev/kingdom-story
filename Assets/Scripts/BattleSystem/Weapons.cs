@@ -1,4 +1,4 @@
-﻿namespace turganaliyev.BattleSystem
+﻿namespace oks.BattleSystem
 {
     public enum Weapons
     {

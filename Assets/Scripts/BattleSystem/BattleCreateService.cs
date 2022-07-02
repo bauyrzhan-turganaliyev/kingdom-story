@@ -6,7 +6,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace turganaliyev.BattleSystem
+namespace oks.BattleSystem
 {
     public class BattleCreateService : MonoBehaviour
     {
@@ -30,11 +30,13 @@ namespace turganaliyev.BattleSystem
         [SerializeField] private Transform _aliasParent;
         [SerializeField] private Transform _enemiesParent;
 
-        public Action<List<Battler>, List<Battler>> OnClickBeginBattle;
+        public Action<List<Battler>, List<Battler>, CreateBattler> OnClickBeginBattle;
         private BattleService _battleService;
+        private oks.GameStateMachine.BattleSystem _battleSystem;
 
-        public void Init(BattleService battleService)
+        public void Init(BattleService battleService, oks.GameStateMachine.BattleSystem battleSystem)
         {
+            _battleSystem = battleSystem;
             _battleService = battleService;
             battleService.OnServiceOpened += ServiceOpened;
             battleService.OnServiceExit += ServiceExit;
@@ -43,8 +45,32 @@ namespace turganaliyev.BattleSystem
         }
         public void OnClickStartBattle()
         {
+            var hasMainHero = false;
+            for (int i = 0; i < _alias.Count; i++)
+            {
+                if (_alias[i].IsPlayer)
+                {
+                    hasMainHero = true;
+                    break;
+                }
+            }
+
+            if (!hasMainHero)
+            {
+                _errorText.text = "Отсутствует главный игрок!";
+                StartCoroutine(ShowError(_errorText));
+                return;
+            }
+            if (_enemies.Count == 0)
+            {
+                _errorText.text = "Количество врагов должно быть больше 0!";
+                StartCoroutine(ShowError(_errorText));
+                return;
+            }
+            
             _battleService.OnExit();
-            OnClickBeginBattle?.Invoke(_alias, _enemies);
+            _battleSystem.OnBeginBattleAction?.Invoke();
+            OnClickBeginBattle?.Invoke(_alias, _enemies, _createBattler);
         }
         public void OnClickCreateBattler()
         {
@@ -53,6 +79,20 @@ namespace turganaliyev.BattleSystem
         public void OnClickCancel()
         {
             _createBattlerPanel.SetActive(false);
+        }
+        public void OnClickClear()
+        {
+            _alias.Clear();
+            _enemies.Clear();
+
+            for (int i = 0; i < _aliasParent.childCount; i++)
+            {
+                Destroy(_aliasParent.GetChild(i).gameObject);
+            }
+            for (int i = 0; i < _enemiesParent.childCount; i++)
+            {
+                Destroy(_enemiesParent.GetChild(i).gameObject);
+            }
         }
         public void OnClickAccept()
         {
@@ -114,15 +154,15 @@ namespace turganaliyev.BattleSystem
             if (_isAlias)
             {
                 _alias.Add(battler);
-                battlerObject.transform.SetParent(_aliasParent);
+                battlerObject.Item1.transform.SetParent(_aliasParent);
             }
             else
             {
                 _enemies.Add(battler);
-                battlerObject.transform.SetParent(_enemiesParent);
+                battlerObject.Item1.transform.SetParent(_enemiesParent);
             }
 
-            battlerObject.transform.localScale = new Vector3(1, 1, 1);
+            battlerObject.Item1.transform.localScale = new Vector3(1, 1, 1);
         }
         private void ServiceOpened()
         {

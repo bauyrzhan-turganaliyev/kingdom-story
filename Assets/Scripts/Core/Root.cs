@@ -1,9 +1,9 @@
+using oks.BattleSystem;
 using oks.GameStateMachine;
-using turganaliyev.BattleSystem;
-using turganaliyev.Jobs.Blacksmith;
+using oks.Jobs.Blacksmith;
 using UnityEngine;
 
-namespace turganaliyev.Core
+namespace oks.Core
 {
     public class Root : MonoBehaviour
     {
@@ -14,7 +14,7 @@ namespace turganaliyev.Core
         {
             _gameSystem.Init();
             _blacksmithService.Init();
-            _battleService.Init();
+            _battleService.Init(_gameSystem.BattleSystem);
         }
     }
 }

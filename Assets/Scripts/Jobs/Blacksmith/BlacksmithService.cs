@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace turganaliyev.Jobs.Blacksmith
+namespace oks.Jobs.Blacksmith
 {
     public class BlacksmithService : MonoBehaviour
     {

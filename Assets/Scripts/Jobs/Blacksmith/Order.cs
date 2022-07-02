@@ -2,7 +2,7 @@
 using TMPro;
 using UnityEngine;
 
-namespace turganaliyev.Jobs.Blacksmith
+namespace oks.Jobs.Blacksmith
 {
     public class Order : MonoBehaviour
     {

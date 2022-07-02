@@ -2,13 +2,10 @@
 
 namespace oks.GameStateMachine
 {
-    public class BattleSystem : StateMachine
+    public class BattleSystem : GameSystem
     {
         public Action OnBeginBattleAction;
-        
-        public void OnBeginBattle()
-        {
-            OnBeginBattleAction?.Invoke();
-        }
+        public Action<bool> OnFinishedBattleAction;
+        public Action OnQuitBattle;
     }
 }

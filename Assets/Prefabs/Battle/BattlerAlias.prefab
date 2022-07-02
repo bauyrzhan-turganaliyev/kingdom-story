@@ -91,6 +91,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DamageText: {fileID: 662754586201096904}
   DamageCDText: {fileID: 662754586545435420}
+  HPBar: {fileID: 662754586051672605}
   WeaponImage: {fileID: 6384977533585068768}
   PlayerOrNpcText: {fileID: 5690257109083670886}
   Team: 0

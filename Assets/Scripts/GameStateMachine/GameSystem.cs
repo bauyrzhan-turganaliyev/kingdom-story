@@ -5,7 +5,7 @@ namespace oks.GameStateMachine
 {
     public class GameSystem : StateMachine
     {
-        [SerializeField] private BattleSystem _battleSystem;
+        public BattleSystem BattleSystem;
         [SerializeField] private TMP_Text _stateText;
 
         public void Init()
@@ -16,7 +16,21 @@ namespace oks.GameStateMachine
 
         private void SubscribeServices()
         {
-            _battleSystem.OnBeginBattleAction += OnBeginBattle;
+            BattleSystem.OnBeginBattleAction += OnBeginBattle;
+            BattleSystem.OnFinishedBattleAction += OnFinishedBattle;
+            BattleSystem.OnQuitBattle += OnQuitBattle;
+        }
+
+        private void OnFinishedBattle(bool flag)
+        {
+            if (flag)
+            {
+                SetState(new AliasWin(this));
+            }
+            else
+            {
+                SetState(new EnemiesWin(this));
+            }
         }
 
         public void SetText(string message)
@@ -27,6 +41,11 @@ namespace oks.GameStateMachine
         private void OnBeginBattle()
         {
             SetState(new BattleBeginning(this));
+        }
+
+        private void OnQuitBattle()
+        {
+            SetState(new FreeTurn(this));
         }
     }
 }
