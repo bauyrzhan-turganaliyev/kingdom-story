@@ -8,12 +8,15 @@ namespace turganaliyev.BattleSystem
 {
     public class CreateBattler : MonoBehaviour
     {
-        [SerializeField] private GameObject _battlerObject;
+        [SerializeField] private GameObject _battlerAliasObject;
+        [SerializeField] private GameObject _battlerEnemyObject;
         [SerializeField] private List<Sprite> _weaponsList;
         
         public GameObject CreateBattlerObject(Battler battler)
         {
-            var battlerObject = Instantiate(_battlerObject);
+            GameObject battlerObject = null;
+            battlerObject = Instantiate(battler.Team == Team.Alias ? _battlerAliasObject : _battlerEnemyObject);
+
             var battlerComponent = battlerObject.GetComponent<Battler>();
 
             battlerComponent.Damage = battler.Damage;
@@ -25,6 +28,8 @@ namespace turganaliyev.BattleSystem
             battlerComponent.DamageText.text = battlerComponent.Damage.ToString();
             battlerComponent.DamageCDText.text = battlerComponent.DamageReload.ToString();
 
+            battlerComponent.PlayerOrNpcText.text = battlerComponent.IsPlayer ? "Player" : "NPC";
+            battlerComponent.PlayerOrNpcText.color = battlerComponent.IsPlayer ? Color.green : Color.red;
             var weaponImage = battlerComponent.WeaponImage;
             switch ((int)battlerComponent.Weapon)
             {

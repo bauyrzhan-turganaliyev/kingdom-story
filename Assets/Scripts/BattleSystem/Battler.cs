@@ -9,6 +9,7 @@ namespace turganaliyev.BattleSystem
         public TMP_Text DamageText;
         public TMP_Text DamageCDText;
         public Image WeaponImage;
+        public TMP_Text PlayerOrNpcText;
 
         public Team Team;
         public Weapons Weapon;

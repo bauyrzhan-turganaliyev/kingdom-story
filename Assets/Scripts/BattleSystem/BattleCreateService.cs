@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -28,13 +30,22 @@ namespace turganaliyev.BattleSystem
         [SerializeField] private Transform _aliasParent;
         [SerializeField] private Transform _enemiesParent;
 
+        public Action<List<Battler>, List<Battler>> OnClickBeginBattle;
+        private BattleService _battleService;
+
         public void Init(BattleService battleService)
         {
+            _battleService = battleService;
             battleService.OnServiceOpened += ServiceOpened;
             battleService.OnServiceExit += ServiceExit;
+            OnClickBeginBattle += battleService.OnClickBeginBattle;
             _createBattlerPanel.SetActive(false);
         }
-
+        public void OnClickStartBattle()
+        {
+            _battleService.OnExit();
+            OnClickBeginBattle?.Invoke(_alias, _enemies);
+        }
         public void OnClickCreateBattler()
         {
             _createBattlerPanel.SetActive(true);
@@ -56,53 +67,45 @@ namespace turganaliyev.BattleSystem
                 case (int)Team.Alias:
                     team = Team.Alias;
                     _isAlias = true;
-                    print("Alias Selected");
                     break;
                 
                 case (int)Team.Enemy:
                     team = Team.Enemy;
-                    print("Enemy Selected");
-                    break;
-            }
-            switch (_weaponSelect.value)
-            {
-                case (int) Weapons.Longsword:
-                    weapon = Weapons.Longsword;
-                    break;
-                case (int) Weapons.Bow:
-                    weapon = Weapons.Bow;
-                    break;
-                case (int) Weapons.SwordAndShield:
-                    weapon = Weapons.SwordAndShield;
-                    break;
-                case (int) Weapons.Axe:
-                    weapon = Weapons.Axe;
-                    break;
-                case (int) Weapons.NoWeapon:
-                    weapon = Weapons.NoWeapon;
-                    break;
-                case (int) Weapons.Mace:
-                    weapon = Weapons.Mace;
                     break;
             }
 
-            if (float.TryParse(_damageIF.text, out float damageValue))
+            weapon = _weaponSelect.value switch
+            {
+                (int)Weapons.Longsword => Weapons.Longsword,
+                (int)Weapons.Bow => Weapons.Bow,
+                (int)Weapons.SwordAndShield => Weapons.SwordAndShield,
+                (int)Weapons.Axe => Weapons.Axe,
+                (int)Weapons.NoWeapon => Weapons.NoWeapon,
+                (int)Weapons.Mace => Weapons.Mace,
+                _ => weapon
+            };
+
+            if (float.TryParse(_damageIF.text, out var damageValue))
             {
                 damage = damageValue;
             }
-            if (float.TryParse(_damageCDIF.text, out float damageCDValue))
+            if (float.TryParse(_damageCDIF.text, out var damageCDValue))
             {
                 damageCD = damageCDValue;
             }
 
-            for (int i = 0; i < _alias.Count; i++)
+            if (_alias.Any(t => t.IsPlayer && _isPlayerToggle.isOn))
             {
-                if (_alias[i].IsPlayer && _isPlayerToggle.isOn)
-                {
-                    _errorText.text = "Главный игрок уже существует!";
-                    StartCoroutine(ShowError(_errorText));
-                    return;
-                }
+                _errorText.text = "Главный игрок уже существует!";
+                StartCoroutine(ShowError(_errorText));
+                return;
+            }
+
+            if (!_isAlias && _isPlayerToggle.isOn)
+            {
+                _errorText.text = "Главный игрок не может быть во вражейской команде!";
+                StartCoroutine(ShowError(_errorText));
+                return;
             }
             
             Battler battler = new Battler(team, weapon, damage, damageCD, _isPlayerToggle.isOn);

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace turganaliyev.BattleSystem
@@ -7,6 +8,7 @@ namespace turganaliyev.BattleSystem
     {
         [SerializeField] private Transform _transform;
         [SerializeField] private BattleCreateService _battleCreateService;
+        [SerializeField] private BattleTime _battleTime;
         [SerializeField] private GameObject _battleSetupPanel;
 
         public Action OnServiceOpened;
@@ -29,6 +31,12 @@ namespace turganaliyev.BattleSystem
             _transform.SetAsLastSibling();
             _battleSetupPanel.SetActive(false);
             OnServiceExit?.Invoke();
+        }
+
+        public void OnClickBeginBattle(List<Battler> alias, List<Battler> enemies)
+        {
+            print("Clicked");
+            _battleTime.PrepairBattle(alias, enemies);
         }
     }
 }
