@@ -1,12 +1,23 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using oks.Core;
+using UnityEngine;
 
-namespace turganaliyev.Shop
+namespace oks.Shop
 {
     public class ShopService : MonoBehaviour
     {
         [SerializeField] private Transform _transform;
         [SerializeField] private GameObject _shopPanel;
+        [SerializeField] private ShopSelectorService _shopSelectorService;
+        [SerializeField] private TradeService _tradeService;
+        public void Init(GameResourcesHUB gameResourcesHub)
+        {
+            _shopSelectorService.Init(_tradeService, gameResourcesHub);
 
+            _shopSelectorService.OnClickedTrader += OnClickExit;
+        }
+        
         public void OnClickEnter()
         {
             _shopPanel.SetActive(true);
