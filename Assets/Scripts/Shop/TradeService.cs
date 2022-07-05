@@ -50,27 +50,27 @@ namespace oks.Shop
 
         private void StartTradingTrader()
         {
-            _traderInfo.Init(_traderAvailableItems);
+            _traderInfo.Init(_traderAvailableItems, _traderParent, _gameResourcesHub);
         }
 
         private void StartTradingGunsmith()
         {
-            _traderInfo.Init(_gunsmithAvailableItems);
+            _traderInfo.Init(_gunsmithAvailableItems, _traderParent, _gameResourcesHub);
         }
 
         private void StartTradingAlchemist()
         {
-            _traderInfo.Init(_alchemistAvailableItems);
+            _traderInfo.Init(_alchemistAvailableItems, _traderParent, _gameResourcesHub);
         }
 
         private void StartTradingButcher()
         {
-            _traderInfo.Init(_butcherAvailableItems);
+            _traderInfo.Init(_butcherAvailableItems, _traderParent, _gameResourcesHub);
         }
 
         private void StartTradingArmorer()
         {
-            _traderInfo.Init(_armorerAvailableItems);
+            _traderInfo.Init(_armorerAvailableItems, _traderParent, _gameResourcesHub);
         }
         
         private void SortAllItems()

@@ -10,10 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 980695076eaa4590ae0eee2d98150035, type: 3}
-  m_Name: IronHelmet
+  m_Name: Iron Helmet
   m_EditorClassIdentifier: 
-  Type: 0
-  ShopSelectorTypes: 0100000003000000
+  Type: 1
+  Name: "\u0416\u0435\u043B\u0435\u0437\u043D\u044B\u0439 \u0448\u043B\u0435\u043C"
+  ShopSelectorTypes: 0000000003000000
   AveragePrice: 200
   Defence: 10
   HealthPoint: 100

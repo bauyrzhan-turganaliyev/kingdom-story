@@ -2,6 +2,7 @@ using oks.BattleSystem;
 using oks.GameResources;
 using oks.GameStateMachine;
 using oks.Jobs.Blacksmith;
+using oks.PlayerData;
 using oks.Shop;
 using UnityEngine;
 
