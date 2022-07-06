@@ -358,6 +358,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67eb62b5f5c24dfebf7be1e5baec3475, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _nameOfResourceText: {fileID: 1369404587329474870}
-  _priceOfResourceText: {fileID: 3248159987660210283}
+  NameOfResourceText: {fileID: 1369404587329474870}
+  PriceOfResourceText: {fileID: 3248159987660210283}
   _image: {fileID: 848802013473732241}
+  NameOfResource: 
+  Price: 0
+  IsSelected: 0
+  IsInPlayer: 0
+  Resource: {fileID: 0}

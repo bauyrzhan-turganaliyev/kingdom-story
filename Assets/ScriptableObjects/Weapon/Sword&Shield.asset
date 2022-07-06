@@ -9,13 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 980695076eaa4590ae0eee2d98150035, type: 3}
-  m_Name: Iron Armor
+  m_Script: {fileID: 11500000, guid: 12b04769ed4c430cbf3f25f2a184f376, type: 3}
+  m_Name: Sword&Shield
   m_EditorClassIdentifier: 
-  Type: 1
-  Name: "\u0416\u0435\u043B\u0435\u0437\u043D\u044B\u0439 \u043D\u0430\u0433\u0440\u0443\u0434\u043D\u0438\u043A"
-  ShopSelectorTypes: 0000000003000000
-  AveragePrice: 600
+  Type: 0
+  Name: "\u041C\u0435\u0447 \u0438 \u0449\u0438\u0442"
+  ShopSelectorTypes: 0100000003000000
+  AveragePrice: 1000
   IsInPlayer: 0
-  Defence: 30
+  DamageValue: 3
+  DamageCooldown: 1
   HealthPoint: 100

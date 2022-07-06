@@ -8,47 +8,66 @@ namespace oks.GameResources
 {
     public class ResourceInfo : MonoBehaviour, IPointerClickHandler
     {
-        [SerializeField] private TMP_Text _nameOfResourceText;
-        [SerializeField] private TMP_Text _priceOfResourceText;
+        [SerializeField] private TMP_Text NameOfResourceText;
+        [SerializeField] private TMP_Text PriceOfResourceText;
         [SerializeField] private Image _image;
 
-        public Action<Resource, bool> ResourceClicked;
+        public Action<ResourceInfo, bool> ResourceClicked;
         
-        private string _nameOfResource;
-        private int _price;
-        private bool _isSelected;
-        private Resource _resource;
+        public string NameOfResource;
+        public int Price;
+        public bool IsSelected;
+        public bool IsInPlayer;
+        public Resource Resource;
 
-        public void Init(Resource resource)
+        public void Init(Resource resource, bool isInPlayer)
         {
-            _resource = resource;
-            _nameOfResource = resource.Name;
-            _price = resource.AveragePrice;
+            Resource = resource;
+            NameOfResource = resource.Name;
+            Price = resource.AveragePrice;
 
-            _nameOfResourceText.text = _nameOfResource;
-            _priceOfResourceText.text = _price.ToString();
+            IsInPlayer = isInPlayer;
+            NameOfResourceText.text = NameOfResource;
+            PriceOfResourceText.text = Price.ToString();
             
             _image.color = Color.white;
         }
-
         public string GetName()
         {
-            return _nameOfResource;
+            return NameOfResource;
+        }
+
+        public void TransferToPlayer()
+        {
+            IsInPlayer = true;
+            IsSelected = false;
+            
+            OnDiselect();
         }
         public void OnPointerClick(PointerEventData eventData)
         {
-            if (_isSelected)
+            if (IsSelected)
             {
-                _image.color = Color.white;
-                _isSelected = false;
-                ResourceClicked?.Invoke(_resource, false);
+                OnDiselect();
+                ResourceClicked?.Invoke(this, false);
             }
             else
             {
-                _image.color = Color.green;
-                _isSelected = true;
-                ResourceClicked?.Invoke(_resource, true);
+                OnSelect();
+                ResourceClicked?.Invoke(this, true);
             }
+        }
+
+        public void OnSelect()
+        {
+            _image.color = Color.green;
+            IsSelected = true;
+        }
+
+        public void OnDiselect()
+        {
+            _image.color = Color.white;
+            IsSelected = false;
         }
     }
 }

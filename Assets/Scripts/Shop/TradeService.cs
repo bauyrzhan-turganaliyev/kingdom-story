@@ -17,6 +17,8 @@ namespace oks.Shop
         [SerializeField] private List<Resource> _butcherAvailableItems;
         [SerializeField] private List<Resource> _traderAvailableItems;
         [SerializeField] private List<Resource> _alchemistAvailableItems;
+
+        public Action QuitFromTrade;
         
         private GameResourcesHUB _gameResourcesHub;
         public void Init(GameResourcesHUB gameResourcesHub)
@@ -103,8 +105,8 @@ namespace oks.Shop
 
         public void OnClickExit()
         {
-            
             _tradingPanel.SetActive(false);
+            QuitFromTrade?.Invoke();
         }
     }
 }

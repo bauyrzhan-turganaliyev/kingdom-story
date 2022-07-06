@@ -1,10 +1,12 @@
-﻿namespace oks.GameResources
+﻿using UnityEngine;
+
+namespace oks.GameResources
 {
-    [System.Serializable]
+    [CreateAssetMenu(fileName = "Weapon", menuName = "ScriptableObjects/Weapon", order = 1)]
     public class Weapon : Resource
     {
-        public float damage;
-        public float damageCD;
-        
+        public float DamageValue;
+        public float DamageCooldown;
+        public int HealthPoint;
     }
 }

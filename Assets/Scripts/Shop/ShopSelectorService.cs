@@ -11,15 +11,22 @@ namespace oks.Shop
         private TradeService _tradeService;
 
         public Action OnClickedTrader;
-
+        public Action QuitFromTradeAction;
         public void Init(TradeService tradeService, GameResourcesHUB gameResourcesHub)
         {
             _tradeService = tradeService;
-            _tradeService.Init(gameResourcesHub);   
+            _tradeService.Init(gameResourcesHub);
+
+            _tradeService.QuitFromTrade += QuitFromTrade;
             foreach (var shopSelector in _shopSelectors)
             {
                 shopSelector.OnClicked += OnClickedShoper;
             }
+        }
+
+        private void QuitFromTrade()
+        {
+            QuitFromTradeAction?.Invoke();
         }
 
         private void OnClickedShoper(ShopSelector shopSelector)

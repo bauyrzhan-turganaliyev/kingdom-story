@@ -14,10 +14,16 @@ namespace oks.Shop
         public void Init(GameResourcesHUB gameResourcesHub)
         {
             _shopSelectorService.Init(_tradeService, gameResourcesHub);
-
+            _shopSelectorService.QuitFromTradeAction += QuitFromTrade;
             _shopSelectorService.OnClickedTrader += OnClickExit;
         }
-        
+
+        private void QuitFromTrade()
+        {
+            _shopPanel.SetActive(true);
+            _transform.SetAsLastSibling();
+        }
+
         public void OnClickEnter()
         {
             _shopPanel.SetActive(true);

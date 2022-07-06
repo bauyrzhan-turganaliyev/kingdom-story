@@ -14,12 +14,13 @@ namespace oks.Shop
         [SerializeField] private TMP_Text _errorText;
         
         [SerializeField] private List<Resource> _resourceList;
+        [SerializeField] private List<ResourceInfo> _traderInventory;
         [SerializeField] private ResourceInfo _resourcePrefab;
 
-        [SerializeField] private List<Resource> _resourcesForBuy;
-        [SerializeField] private List<Resource> _resourcesForSell;
+        [SerializeField] private List<ResourceInfo> _resourcesForBuy;
+        [SerializeField] private List<ResourceInfo> _resourcesForSell;
         
-        private List<Resource> _resourcesFromPlayer = new List<Resource>();
+        private List<ResourceInfo> _resourcesFromPlayer = new List<ResourceInfo>();
         
         private Transform _traderParent;
         private Transform _playerParent;
@@ -36,37 +37,34 @@ namespace oks.Shop
             _playerParent = _gameResourcesHub.Player.PlayerParentInShop;
 
             ClearTraderPanel();
-            UpdatePlayerInventory();
 
             for (int i = 0; i < _resourceList.Count; i++)
             {
                 var item = Instantiate(_resourcePrefab, _traderParent);
-                item.Init(_resourceList[i]);
+                item.Init(_resourceList[i], false);
                 item.ResourceClicked += OnClickToResource;
+                _traderInventory.Add(item);
             }
         }
 
         public void OnClickToTrade()
         {
-
-            if (_totalCost >= _totalIncome)
+            print(_totalCost - _totalIncome);
+            if (_totalCost - _totalIncome <= 0)
             {
-                if (!_gameResourcesHub.Player.CheckForTrade(_totalCost))
-                {
-                    _errorText.text = "У вас не хватает монет!";
-                    StartCoroutine(ShowError(_errorText));
-                    return;
-                }
-
-                _gameResourcesHub.Player.AddItems(_resourcesForBuy);
-            }
-            else
+                _gameResourcesHub.Player.AddMoney(_totalCost - _totalIncome);
+            } else if (!_gameResourcesHub.Player.CheckForTrade(_totalCost - _totalIncome))
             {
-                _resourcesFromPlayer = _gameResourcesHub.Player.GetItems(_resourcesForSell);
+                _errorText.text = "У вас не хватает монет!";
+                StartCoroutine(ShowError(_errorText));
+                return;
             }
-
+            
+            _gameResourcesHub.Player.AddItems(ref _resourcesForBuy);
+            _resourcesFromPlayer = _gameResourcesHub.Player.GetItems(_resourcesForSell);
+            
+            
             UpdateTraderInventory();
-            UpdatePlayerInventory();
             UpdateTexts();
         }
 
@@ -80,48 +78,31 @@ namespace oks.Shop
 
         private void UpdateTraderInventory()
         {
-            ClearTraderPanel();
-            
             for (int i = 0; i < _resourcesForBuy.Count; i++)
             {
-                if (_resourceList.Contains(_resourcesForBuy[i]))
+                _resourcesForBuy[i].transform.parent = _gameResourcesHub.Player.PlayerParentInShop;
+            }
+
+            for (var i = 0; i < _resourcesForBuy.Count; i++)
+            {
+                if (_traderInventory.Remove(_resourcesForBuy[i]))
                 {
-                    var index = _resourceList.IndexOf(_resourcesForBuy[i]);
-                    
-                    _resourceList.RemoveAt(index);
                     _resourcesForBuy.RemoveAt(i);
-                    
+                    i = -1;
                 }
             }
-            print(_resourceList.Count);
 
             for (int i = 0; i < _resourcesFromPlayer.Count; i++)
             {
-                _resourceList.Add(_resourcesFromPlayer[i]);
+                _resourcesFromPlayer[i].transform.parent = _traderParent;
+                _resourcesFromPlayer[i].OnDiselect();
+                _traderInventory.Add(_resourcesFromPlayer[i]);  
             }
-            
-            for (int i = 0; i < _resourceList.Count; i++)
-            {
-                var item = Instantiate(_resourcePrefab, _traderParent);
-                item.Init(_resourceList[i]);
-                item.ResourceClicked += OnClickToResource;
-            }
-            
-        }
 
-        private void UpdatePlayerInventory()
-        {
-            ClearPlayerPanel();
-            
-            for (int i = 0; i < _gameResourcesHub.Player.Resources.Count; i++)
-            {
-                var item = Instantiate(_resourcePrefab, _playerParent);
-                item.Init(_gameResourcesHub.Player.Resources[i]);
-                item.ResourceClicked += OnClickToResource;
-            }
+            _resourcesFromPlayer.Clear();
+            _resourcesForSell.Clear();
         }
-
-        private void OnClickToResource(Resource resource, bool flag)
+        private void OnClickToResource(ResourceInfo resource, bool flag)
         {
             if (flag)
             {
@@ -133,38 +114,46 @@ namespace oks.Shop
             }
         }
 
-        private void AddResource(Resource resource)
+        private void AddResource(ResourceInfo resource)
         {
             if (resource.IsInPlayer)
             {
                 _resourcesForSell.Add(resource);
-                _totalIncome += resource.AveragePrice;
+                _totalIncome += resource.Price;
             }
             else
             {
                 print("Adding resource...");
                 _resourcesForBuy.Add(resource);
-                _totalCost += resource.AveragePrice;
+                _totalCost += resource.Price;
             }
             
             _buySellText.text = $"Продажа/покупка:  {_totalIncome}/{_totalCost}";
-            _totalCostText.text = $"Ты заплатишь: {_totalCost}";
+
+            if (_totalCost - _totalIncome <= 0)
+            {
+                _totalCostText.text = $"Ты получишь: {(_totalCost - _totalIncome) * -1}";
+            }
+            else
+            {
+                _totalCostText.text = $"Ты заплатишь: {_totalCost - _totalIncome}";
+            }
         }
 
-        private void RemoveResource(Resource resource)
+        private void RemoveResource(ResourceInfo resource)
         {
             if (_resourcesForSell.Contains(resource))
             {
                 var index = _resourcesForSell.IndexOf(resource);
                 _resourcesForSell.RemoveAt(index);
-                _totalIncome -= resource.AveragePrice;
+                _totalIncome -= resource.Price;
             }
 
             if (_resourcesForBuy.Contains(resource))
             {
                 var index = _resourcesForBuy.IndexOf(resource);
                 _resourcesForBuy.RemoveAt(index);
-                _totalCost -= resource.AveragePrice;
+                _totalCost -= resource.Price;
             }
 
             _buySellText.text = $"Продажа/покупка:  {_totalIncome}/{_totalCost}";
@@ -177,6 +166,7 @@ namespace oks.Shop
             {
                 Destroy(_traderParent.GetChild(i).gameObject);    
             }
+            _traderInventory.Clear();
         }
         
         private void ClearPlayerPanel()
